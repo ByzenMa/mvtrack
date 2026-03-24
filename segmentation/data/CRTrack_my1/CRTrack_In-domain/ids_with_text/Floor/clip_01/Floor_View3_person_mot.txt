@@ -1,0 +1,49 @@
+A person in a black hoodie.: 0
+A person in a black hoodie and black joggers.: 0
+A person with a black beanie.: 1,15
+A person with a black beanie, in a white hoodie.: 1
+A person with a black beanie, in a white hoodie, black trousers, white sneakers, holding a pink-capped bottle.: 1
+A person with a black beanie, in a black coat.: 15
+A person with a black beanie, in a black coat, dark trousers, holding a light phone.: 15
+A person in a black jacket.: 3
+A person in a black jacket and gray trousers.: 3
+A person with a dark cap.: 4,7
+A person with a dark cap, in a black coat with gray graphic.: 4
+A person with a dark cap, in a black coat with gray graphic, black trousers, white sneakers, holding a light garment.: 4
+A person with a dark cap, in a camouflage jacket.: 7
+A person with a dark cap, in a camouflage jacket, light blue jeans, white sneakers, holding a white bag.: 7
+A person in a light coat.: 5,6,9
+A person in a light coat and dark trousers.: 5,9
+A person in a light gray coat.: 6
+A person in a light gray coat and black trousers.: 6
+A person in a black coat.: 4,11,14,15,16,17
+A person in a black coat and dark trousers.: 11,14,15,16
+A person in a black coat and black trousers.: 17
+A person in a dark coat.: 16
+A person in a dark coat and dark trousers, holding a light document.: 16
+A person with a yellow beanie.: 10
+A person with a yellow beanie, in a yellow top.: 10
+A person with a yellow beanie, in a yellow top, black trousers, light shoes, holding a dark phone.: 10
+A person with a light beanie.: 11
+A person with a light beanie, in a black coat.: 11
+A person with a light beanie, in a black coat, dark trousers, holding a white bag with blue accents.: 11
+A person in black trousers.: 1,4,6,7,10,11,12,13,14,15,16,17
+A person in black trousers and white athletic shoes.: 12
+A person in white sneakers.: 1,4,7
+A person in white sneakers, holding a pink-capped bottle.: 1
+A person in white sneakers, holding a light garment.: 4
+A person in white sneakers, holding a white bag.: 7
+A person holding a pink-capped bottle.: 1
+A person holding a light garment.: 4
+A person holding a white bag.: 7,11
+A person holding a white bag with blue accents.: 11
+A person holding a dark phone.: 10
+A person holding a light phone.: 15
+A person holding a light document.: 16
+A person in a peach top.: 13
+A person in a peach top and light gray trousers.: 13
+A person in light gray trousers.: 13
+A person in light blue jeans.: 7
+A person in a yellow top.: 10
+A person in a black coat with gray graphic.: 4
+A person in a camouflage jacket.: 7

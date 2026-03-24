@@ -1,0 +1,40 @@
+A person in a white hoodie.: 2
+A person in a black coat.: 4,15,19
+A person in a maroon coat.: 9
+A person in a beige coat.: 10
+A person in a light beige coat.: 11
+A person in an orange top.: 14
+A person with a dark hood.: 15
+A person in a dark coat.: 19
+A person with a black beanie.: 4,21
+A person in an olive coat.: 21
+A person in black trousers.: 2,4,10,11,15,19
+A person in light beige trousers.: 9
+A person in gray trousers.: 4
+A person in light gray trousers.: 14
+A person in dark trousers.: 21
+A person in black leggings.: 11
+A person wearing white sneakers.: 2,11,14,15,19,21
+A person wearing black ankle boots.: 9
+A person wearing dark brown shoes.: 4
+A person wearing light flat shoes.: 10
+A person holding a red bottle.: 2
+A person holding a dark object.: 9
+A person holding a green book.: 14
+A person holding a green-red bag.: 21
+A person with a black shoulder bag.: 10
+A person with a black crossbody bag.: 11
+A person carrying a dark bag.: 15
+A person in a black coat and black trousers.: 15,19
+A person in a black coat and black trousers and white sneakers.: 15,19
+A person with a black beanie and in a black coat.: 4
+A person with a black beanie and in an olive coat.: 21
+A person in a black coat and gray trousers.: 4
+A person in a black coat and black trousers and dark brown shoes.: 4
+A person in a maroon coat and black ankle boots.: 9
+A person in a beige coat and black trousers.: 10
+A person in a light beige coat and black leggings.: 11
+A person in an orange top and light gray trousers.: 14
+A person in an orange top and light gray trousers and white sneakers.: 14
+A person in a dark coat and black trousers and white sneakers.: 19
+A person with a black beanie and in an olive coat and dark trousers and white sneakers.: 21

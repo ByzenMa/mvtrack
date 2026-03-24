@@ -1,0 +1,17 @@
+0: A person in a black hoodie and black joggers.
+1: A person with a black beanie, in a white hoodie, black trousers, white sneakers, holding a pink-capped bottle.
+3: A person in a black jacket and gray trousers.
+4: A person with a dark cap, in a black coat with gray graphic, black trousers, white sneakers, holding a light garment.
+5: A person in a light coat and dark trousers.
+6: A person in a light gray coat and black trousers.
+7: A person with a dark cap, in a camouflage jacket, light blue jeans, white sneakers, holding a white bag.
+8: Unclear.
+9: A person in a light coat and dark trousers.
+10: A person with a yellow beanie, in a yellow top, black trousers, light shoes, holding a dark phone.
+11: A person with a light beanie, in a black coat, dark trousers, holding a white bag with blue accents.
+12: A person in black trousers and white athletic shoes.
+13: A person in a peach top and light gray trousers.
+14: A person in a black coat and dark trousers.
+15: A person with a black beanie, in a black coat, dark trousers, holding a light phone.
+16: A person in a dark coat and dark trousers, holding a light document.
+17: A person in a black coat and black trousers.

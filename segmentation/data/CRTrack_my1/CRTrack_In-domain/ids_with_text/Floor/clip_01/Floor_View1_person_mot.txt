@@ -1,0 +1,90 @@
+A person in a maroon coat.: 0,16
+A person in a maroon coat and light beige trousers.: 0,16
+A person in a dark coat.: 1,2,3,4,5,7,8,9,12,17
+A person in a dark coat and dark trousers.: 1,2,3,4,7,9,12,17
+A person in a dark coat, dark trousers and dark shoes.: 4,9,17
+A person in a dark coat, dark trousers and white sneakers.: 1,7
+A person in a dark coat, dark trousers and holding a phone.: 1,17
+A person in a dark coat, dark trousers and holding white shopping bags.: 4
+A person in a dark coat, dark trousers and holding a light object.: 3,8
+A person in a dark coat, dark trousers and holding a pink phone.: 5
+A person in a dark coat, dark trousers and carrying a lavender bag.: 7
+A person in a dark coat, dark trousers and holding a yellow bottle.: 12
+A person in a dark coat, dark trousers and holding a white umbrella.: 13
+A person in a dark coat, dark trousers and holding a dark object.: 16
+A person with a black beanie.: 2,5,7,12
+A person with a black beanie and in a black coat.: 2,5,7
+A person with a black beanie, in a black coat and black trousers.: 2,7
+A person with a black beanie, in a black coat, black trousers and white sneakers.: 7
+A person with a black beanie, in a black coat, black trousers and dark sneakers.: 2
+A person with a black beanie, in a black coat, gray trousers and dark shoes.: 5
+A person with a black beanie, in a dark hooded coat, dark trousers and black shoes.: 12
+A person with dark headwear.: 3,5,13,15,16
+A person with dark headwear and in a dark coat.: 3,5,13,16
+A person with dark headwear, in a dark coat and dark trousers.: 3,5,16
+A person with dark headwear, in a dark coat and dark skirt.: 13
+A person with dark headwear, in a maroon coat and light beige trousers.: 16
+A person with dark headwear and in a green camouflage jacket.: 15
+A person with a dark blue cap and in a green camouflage jacket.: 15
+A person with a dark blue cap, in a green camouflage jacket, blue jeans and off-white sneakers.: 15
+A person with a dark blue cap, in a green camouflage jacket, blue jeans, off-white sneakers and carrying a green bag.: 15
+A person in a black coat.: 2,5,7,12,17
+A person in a black coat and black trousers.: 2,7,17
+A person in a black coat, black trousers and dark sneakers.: 2
+A person in a black coat, black trousers and white sneakers.: 7
+A person in a black coat, black trousers and black shoes.: 17
+A person in a black coat, black trousers and holding a phone.: 17
+A person in a black coat, gray trousers and dark shoes.: 5
+A person in a dark red coat.: 8
+A person in a dark red coat and dark trousers.: 8
+A person in a dark red coat, dark trousers and dark shoes.: 8
+A person in a dark suit jacket.: 9
+A person in a dark suit jacket and dark trousers.: 9
+A person in a dark suit jacket, dark trousers and dark shoes.: 9
+A person in a light gray top.: 10,11,19
+A person in a light gray top and black trousers.: 10,11,19
+A person in a light gray top, black trousers and black boots.: 10,19
+A person in a light gray top, black trousers, black boots and holding a white bag.: 10,19
+A person in a white hoodie.: 11
+A person in a white hoodie and black patterned trousers.: 11
+A person in a white hoodie, black patterned trousers and light gray sneakers.: 11
+A person in a white hoodie, black patterned trousers, light gray sneakers and holding a pink bottle.: 11
+A person in an orange top.: 14
+A person in an orange top and light gray trousers.: 14
+A person in an orange top, light gray trousers and white sneakers.: 14
+A person in an orange top, light gray trousers, white sneakers and holding a light object.: 14
+A person in a brown coat.: 18,20
+A person in a brown coat and dark trousers.: 18
+A person in a brown coat, dark trousers and dark brown shoes.: 18
+A person in a brown coat, black trousers and white sneakers.: 20
+A person in a brown coat, black trousers, white sneakers and carrying a tan bag.: 20
+A person in a light mask and in a brown coat.: 20
+A person in a light mask, in a brown coat, black trousers and white sneakers.: 20
+A person in a light mask, in a brown coat, black trousers, white sneakers and carrying a tan bag.: 20
+A person holding a bag.: 0
+A person holding a phone.: 1,5,17
+A person holding white shopping bags.: 4
+A person holding a light object.: 3,8,14
+A person holding a pink phone.: 5
+A person carrying a lavender bag.: 7
+A person holding a yellow bottle.: 12
+A person holding a white umbrella.: 13
+A person holding a dark object.: 16
+A person holding a pink bottle.: 11
+A person carrying a green bag.: 15
+A person carrying a tan bag.: 20
+A person holding a white bag.: 10,19
+A person wearing light beige trousers.: 0,16
+A person wearing gray trousers.: 5
+A person wearing black trousers.: 2,5,7,10,11,12,17,19,20
+A person wearing black patterned trousers.: 11
+A person wearing blue jeans.: 15
+A person wearing light gray trousers.: 14
+A person wearing dark trousers.: 1,2,3,4,5,7,8,9,12,17,18
+A person wearing dark skirt.: 13
+A person wearing dark shoes.: 0,1,2,4,5,7,8,9,12,13,16,17,18
+A person wearing white sneakers.: 1,7,11,14,15,20
+A person wearing off-white sneakers.: 15
+A person wearing light gray sneakers.: 11
+A person wearing black boots.: 10,19
+A person wearing dark brown shoes.: 18

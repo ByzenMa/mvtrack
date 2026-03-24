@@ -1,0 +1,59 @@
+A person in a black coat.: 0,1,3,4,7,8,9,12,14,15
+A person in a black coat and black trousers.: 0,4,7,8,9,15
+A person in a black coat, black trousers and black shoes.: 0,4
+A person in a black coat, black trousers and white sneakers.: 8,15
+A person in a black coat, dark trousers, brown shoes, holding a shopping bag.: 3
+A person in a black coat, dark trousers, dark shoes, holding a light bag.: 14
+A person in a black coat, dark gray trousers, black shoes, holding a red bottle.: 1
+A person in a black coat, black trousers, black shoes, holding a phone.: 0
+A person in a black coat, black trousers, white sneakers, holding a phone.: 8
+A person in a black coat, black trousers, white sneakers.: 15
+A person in a black coat, black trousers.: 4
+A person in a black coat and dark trousers.: 3,14
+A person in a beige coat, olive trousers, beige boots, holding a phone.: 2
+A person in a white shirt, black trousers, black boots.: 5
+A person with a beige jacket, black trousers, white sneakers, carrying a shoulder bag.: 6
+A person with a black cap, black coat, black trousers, black sneakers, carrying a tote bag.: 7
+A person with a black beanie, black coat, black trousers, dark shoes, holding a phone.: 9
+A person in a white coat, black trousers.: 10
+A person in a striped top, black trousers, black boots, carrying a white bag.: 11
+A person with a dark beanie, black coat, light blue trousers.: 12
+A person in an orange top, light gray trousers, white sneakers, holding a phone.: 13
+A person in a white hoodie, black trousers, white sneakers, holding a water bottle.: 17
+A person in black trousers.: 0,1,3,4,5,6,7,8,9,10,11,12,15,17
+A person in black trousers and black boots.: 5,11
+A person in black trousers and white sneakers.: 6,8,15,17
+A person in black trousers and black shoes.: 0,1,4
+A person in black trousers and dark shoes.: 9
+A person in black trousers and light blue trousers.: 12
+A person in black trousers and olive trousers.: 2
+A person in black trousers and gray trousers.: 1
+A person in black trousers and light gray trousers.: 13
+A person in black trousers and white coat.: 10
+A person in black trousers and striped top.: 11
+A person in black trousers and orange top.: 13
+A person in black trousers and white hoodie.: 17
+A person holding a phone.: 0,2,8,9,13,17
+A person holding a red bottle.: 1
+A person holding a shopping bag.: 3
+A person carrying a shoulder bag.: 6
+A person carrying a tote bag.: 7
+A person carrying a white bag.: 11
+A person holding a light bag.: 14
+A person holding a water bottle.: 17
+A person in black shoes.: 0,1,4
+A person in brown shoes.: 3
+A person in dark shoes.: 9,14
+A person in white sneakers.: 6,8,13,15,17
+A person in black sneakers.: 7
+A person in beige boots.: 2
+A person in black boots.: 5,11
+A person with a black cap.: 7
+A person with a black beanie.: 9
+A person with a dark beanie.: 12
+A person in a white coat.: 2,10
+A person in a beige coat.: 2
+A person with a beige jacket.: 6
+A person in a striped top.: 11
+A person in an orange top.: 13
+A person in a white hoodie.: 17

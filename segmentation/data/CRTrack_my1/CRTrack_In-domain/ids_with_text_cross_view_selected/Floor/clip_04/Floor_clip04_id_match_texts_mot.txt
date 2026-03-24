@@ -1,0 +1,26 @@
+A person in a black coat.: 1,4
+A person in a black coat and black trousers.: 1
+A person in a black coat, black trousers, and light gray sneakers.: 1
+A person holding a red phone.: 1
+A person with a black cap.: 4
+A person in a black jacket.: 4
+A person in a black jacket and gray trousers.: 4
+A person in a maroon top.: 9
+A person in a maroon top and beige trousers.: 9
+A person in beige trousers.: 9
+A person in black ankle boots.: 9
+A person carrying a black bag.: 9,11
+A person in a beige coat.: 10
+A person in a beige coat and black leggings.: 10
+A person in black leggings.: 10
+A person in white sneakers.: 10,11
+A person carrying a black backpack.: 10
+A person in a mustard-yellow coat.: 11
+A person in a mustard-yellow coat and black trousers.: 11
+A person in black trousers.: 1,11,23
+A person with a yellow hard hat.: 23
+A person with a yellow hard hat and a yellow high-vis jacket.: 23
+A person in a yellow high-vis jacket.: 23
+A person in a yellow high-vis jacket and black trousers.: 23
+A person in dark gray sneakers.: 23
+A person holding a black smartphone.: 23

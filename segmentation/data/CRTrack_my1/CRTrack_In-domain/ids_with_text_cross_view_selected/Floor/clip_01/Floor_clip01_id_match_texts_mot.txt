@@ -1,0 +1,18 @@
+A person with a black beanie.: 2
+A person in a white hoodie.: 2
+A person in a black jacket.: 4
+A person in gray trousers.: 4
+A person in an orange top.: 14
+A person in light gray trousers.: 14
+A person in white sneakers.: 2,14,15
+A person holding a phone.: 14
+A person in a black coat.: 15,16
+A person in black trousers.: 2,15,17
+A person holding a shopping bag.: 16
+A person in a light gray top.: 17
+A person in black boots.: 17
+A person holding a white bag.: 17
+A person in a black coat and black trousers.: 15
+A person in a black coat and dark trousers.: 16
+A person in a black coat, black trousers, and white sneakers.: 15
+A person with a pink-capped bottle.: 2

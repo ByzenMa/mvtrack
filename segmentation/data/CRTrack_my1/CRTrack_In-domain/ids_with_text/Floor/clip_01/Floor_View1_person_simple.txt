@@ -1,0 +1,20 @@
+0: A person in a maroon coat, light beige trousers, dark shoes, holding a bag.
+1: A person in a dark coat, dark trousers, white sneakers, holding a phone.
+2: A person with a black beanie, in a black coat, black trousers, dark sneakers.
+3: A person with dark headwear, in a dark coat, dark trousers, holding a light object.
+4: A person in a dark coat, dark trousers, dark shoes, holding white shopping bags.
+5: A person with a dark beanie, in a black coat, gray trousers, dark shoes, holding a pink phone.
+7: A person with a black beanie, in a black coat, black trousers, white sneakers, carrying a lavender bag.
+8: A person with light headwear, in a dark red coat, dark trousers, dark shoes, holding light objects.
+9: A person in a dark suit jacket, dark trousers, dark shoes.
+10: A person in a light gray top, black trousers, black boots, holding a white bag.
+11: A person in a white hoodie, black patterned trousers, light gray sneakers, holding a pink bottle.
+12: A person with a black beanie, in a dark hooded coat, dark trousers, black shoes, holding a yellow bottle.
+13: A person with dark headwear, in a dark coat, dark skirt, dark shoes, holding a white umbrella.
+14: A person in an orange top, light gray trousers, white sneakers, holding a light object.
+15: A person with a dark blue cap, in a green camouflage jacket, blue jeans, off-white sneakers, carrying a green bag.
+16: A person with dark headwear, in a maroon coat, light beige trousers, black shoes, holding a dark object.
+17: A person in a black coat, black trousers, black shoes, holding a phone.
+18: A person in a brown coat, dark trousers, dark brown shoes.
+19: A person in a light gray top, black trousers, black boots, holding a white bag.
+20: A person with a light mask, in a brown coat, black trousers, white sneakers, carrying a tan bag.

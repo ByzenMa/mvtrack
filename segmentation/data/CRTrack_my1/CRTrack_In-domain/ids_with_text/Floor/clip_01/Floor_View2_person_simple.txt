@@ -1,0 +1,17 @@
+0: A person in a black coat, black trousers, black shoes, holding a phone.
+1: A person in a black coat, dark gray trousers, black shoes, holding a red bottle.
+2: A person in a beige coat, olive trousers, beige boots, holding a phone.
+3: A person in a black coat, dark trousers, brown shoes, holding a shopping bag.
+4: A person in a black coat, black trousers, black shoes.
+5: A person in a white shirt, black trousers, black boots.
+6: A person with a beige jacket, black trousers, white sneakers, carrying a shoulder bag.
+7: A person with a black cap, black coat, black trousers, black sneakers, carrying a tote bag.
+8: A person in a black coat, black trousers, white sneakers, holding a phone.
+9: A person with a black beanie, black coat, black trousers, dark shoes, holding a phone.
+10: A person in a white coat, black trousers.
+11: A person in a striped top, black trousers, black boots, carrying a white bag.
+12: A person with a dark beanie, black coat, light blue trousers.
+13: A person in an orange top, light gray trousers, white sneakers, holding a phone.
+14: A person in a black coat, dark trousers, dark shoes, holding a light bag.
+15: A person in a black coat, black trousers, white sneakers.
+17: A person in a white hoodie, black trousers, white sneakers, holding a water bottle.
