@@ -15,44 +15,10 @@ from torch.nn import functional as F
 from models.segmentation import loss_masks
 
 
-def _build_reid_batch_inputs(view_samples, view_targets, device):
-    # flatten three views and use dataset-provided pid/tid/camid definitions
-    imgs, pids, cam_ids, tids, timestamps = [], [], [], [], []
-
-    batch_size = len(view_targets[0])
-
-    for b in range(batch_size):
-        for view_idx in range(len(view_samples)):
-            video_tensor = view_samples[view_idx].tensors[b]  # [T, C, H, W]
-            target = view_targets[view_idx][b]
-            frame_ids = target["frames_idx"]
-            frame_count = int(frame_ids.numel())
-
-            pid = int(target["pid"].item()) if hasattr(target["pid"], "item") else int(target["pid"])
-            tid = int(target["tid"].item()) if hasattr(target["tid"], "item") else int(target["tid"])
-            cam_id = int(target["camid"].item()) if hasattr(target["camid"], "item") else int(target["camid"])
-
-            for t in range(frame_count):
-                imgs.append(video_tensor[t])
-                pids.append(pid)
-                cam_ids.append(cam_id)
-                tids.append(tid)
-                timestamps.append(int(frame_ids[t].item()) if hasattr(frame_ids[t], "item") else int(frame_ids[t]))
-
-    x = torch.stack(imgs, dim=0).to(device)
-    return {
-        "images": x,
-        "pids": torch.tensor(pids, dtype=torch.long, device=device),
-        "cam_ids": torch.tensor(cam_ids, dtype=torch.long, device=device),
-        "tids": torch.tensor(tids, dtype=torch.long, device=device),
-        "timestamps": torch.tensor(timestamps, dtype=torch.float, device=device),
-    }
-
-
 def train_one_epoch(model: torch.nn.Module,
                     data_loader: Iterable, optimizer: torch.optim.Optimizer,
                     device: torch.device, epoch: int, max_norm: float = 0,
-                    lr_scheduler=None, args=None, reid_model=None):
+                    lr_scheduler=None, args=None):
     model.train()
     metric_logger = utils.MetricLogger(delimiter="  ")
     metric_logger.add_meter('lr', utils.SmoothedValue(window_size=1, fmt='{value:.6f}'))
@@ -66,54 +32,28 @@ def train_one_epoch(model: torch.nn.Module,
         model.train()
 
         if args is not None and args.dataset_file == 'crtrack':
-            losses = {}
-            for view_idx in range(len(samples)):
-                view_samples = samples[view_idx].to(device)
-                view_targets = targets[view_idx]
+            selected_view_idx = (step - 1) % len(samples)
+            view_samples = samples[selected_view_idx].to(device)
+            view_targets = targets[selected_view_idx]
 
-                captions = [t["caption"] for t in view_targets]
-                outputs = model(view_samples, captions, view_targets)
+            captions = [t["caption"] for t in view_targets]
+            outputs = model(view_samples, captions, view_targets)
 
-                view_loss_dict = loss_masks(
-                    torch.cat(outputs["masks"]),
-                    view_targets,
-                    num_frames=view_samples.tensors.shape[1],
+            losses = loss_masks(
+                torch.cat(outputs["masks"]),
+                view_targets,
+                num_frames=view_samples.tensors.shape[1],
+            )
+
+            if args.use_cme_head and "pred_cme_logits" in outputs:
+                weight = torch.tensor([1., 2.]).to(device)
+                CME_loss = F.cross_entropy(
+                    torch.cat(outputs["pred_cme_logits"]),
+                    ignore_index=-1,
+                    target=torch.tensor(outputs["cme_label"]).long().to(device),
+                    weight=weight,
                 )
-
-                if args.use_cme_head and "pred_cme_logits" in outputs:
-                    weight = torch.tensor([1., 2.]).to(device)
-                    CME_loss = F.cross_entropy(
-                        torch.cat(outputs["pred_cme_logits"]),
-                        ignore_index=-1,
-                        target=torch.tensor(outputs["cme_label"]).long().to(device),
-                        weight=weight,
-                    )
-                    view_loss_dict["CME_loss"] = CME_loss if not CME_loss.isnan() else torch.tensor(0).to(device)
-
-                for k, v in view_loss_dict.items():
-                    if k in losses:
-                        losses[k] = losses[k] + v
-                    else:
-                        losses[k] = v
-            if reid_model is not None:
-                reid_inputs = _build_reid_batch_inputs(samples, targets, device)
-                reid_outputs = reid_model(
-                    reid_inputs["images"],
-                    reid_inputs["cam_ids"],
-                    reid_inputs["timestamps"],
-                )
-                reid_loss_dict = reid_model.compute_loss(
-                    outputs=reid_outputs,
-                    pids=reid_inputs["pids"],
-                    cam_ids=reid_inputs["cam_ids"],
-                    tids=reid_inputs["tids"],
-                    timestamps=reid_inputs["timestamps"],
-                )
-                losses.update({f"reid_{k}": v for k, v in reid_loss_dict.items() if k != "loss"})
-                losses["samwise_loss"] = sum(losses[k] for k in list(losses.keys()) if not k.startswith("reid_"))
-                losses["reid_loss"] = reid_loss_dict["loss"]
-                losses["loss"] = args.samwise_loss_weight * losses["samwise_loss"] + args.reid_loss_weight * losses[
-                    "reid_loss"]
+                losses["CME_loss"] = CME_loss if not CME_loss.isnan() else torch.tensor(0).to(device)
         else:
             samples = samples.to(device)
             captions = [t["caption"] for t in targets]
