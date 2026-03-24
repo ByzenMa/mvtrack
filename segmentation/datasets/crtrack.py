@@ -112,11 +112,23 @@ class CRTrackDataset(Dataset):
     def _prepare_metas(self):
         csv_files, use_selected = self._select_csv_files()
 
-        dropped_for_empty_view_frames = 0
+        stats = {
+            "csv_files": len(csv_files),
+            "rows_total": 0,
+            "rows_scene_filtered": 0,
+            "rows_invalid_view_ids": 0,
+            "rows_drop_missing_rgb_or_mask_frames": 0,
+            "rows_drop_no_shared_frames": 0,
+            "rows_invalid_object_id": 0,
+            "rows_kept": 0,
+            "clips_drop_missing_pkl": 0,
+        }
 
         for csv_path in csv_files:
             scene, clip = self._extract_scene_clip(csv_path, use_selected)
             if self.scene_filter.lower() != "all" and scene != self.scene_filter:
+                with open(csv_path, "r", encoding="utf-8-sig", newline="") as fp:
+                    stats["rows_scene_filtered"] += sum(1 for _ in csv.DictReader(fp))
                 continue
             pkl_dir = self.images_root / scene / clip
 
@@ -127,6 +139,7 @@ class CRTrackDataset(Dataset):
             }
             if not all(path.exists() for path in view_pkls.values()):
                 LOGGER.warning("Skip %s/%s: missing one or more view RLE pkl files.", scene, clip)
+                stats["clips_drop_missing_pkl"] += 1
                 continue
 
             rgb_index = self._build_rgb_index(scene, clip)
@@ -137,7 +150,9 @@ class CRTrackDataset(Dataset):
             with open(csv_path, "r", encoding="utf-8-sig", newline="") as fp:
                 reader = csv.DictReader(fp)
                 for row in reader:
+                    stats["rows_total"] += 1
                     if not self._has_valid_view_ids(row):
+                        stats["rows_invalid_view_ids"] += 1
                         continue
 
                     caption = self._build_caption(row)
@@ -161,7 +176,7 @@ class CRTrackDataset(Dataset):
                             has_empty_view = True
 
                     if has_empty_view:
-                        dropped_for_empty_view_frames += 1
+                        stats["rows_drop_missing_rgb_or_mask_frames"] += 1
                         LOGGER.warning(
                             "Drop sample %s/%s row=%s: empty usable frames in at least one view after filtering.",
                             scene,
@@ -176,7 +191,7 @@ class CRTrackDataset(Dataset):
                         .intersection(frame_ids_per_view["view3"])
                     )
                     if len(shared_frame_ids) == 0:
-                        dropped_for_empty_view_frames += 1
+                        stats["rows_drop_no_shared_frames"] += 1
                         LOGGER.warning(
                             "Drop sample %s/%s row=%s: no shared frame ids across 3 views.",
                             scene,
@@ -194,11 +209,13 @@ class CRTrackDataset(Dataset):
                             clip,
                             row.get("id", "unknown"),
                         )
+                        stats["rows_invalid_object_id"] += 1
                         continue
 
                     if object_id not in self.pid_to_label:
                         self.pid_to_label[object_id] = len(self.pid_to_label)
 
+                    stats["rows_kept"] += 1
                     self.metas.append(
                         {
                             "scene": scene,
@@ -219,8 +236,20 @@ class CRTrackDataset(Dataset):
                         }
                     )
 
-        if dropped_for_empty_view_frames > 0:
-            LOGGER.warning("Dropped %d sample(s) due to empty per-view frame ids.", dropped_for_empty_view_frames)
+        LOGGER.warning(
+            "CRTrack meta stats | csv_files=%d rows_total=%d rows_kept=%d "
+            "rows_scene_filtered=%d rows_invalid_view_ids=%d rows_drop_missing_rgb_or_mask_frames=%d "
+            "rows_drop_no_shared_frames=%d rows_invalid_object_id=%d clips_drop_missing_pkl=%d",
+            stats["csv_files"],
+            stats["rows_total"],
+            stats["rows_kept"],
+            stats["rows_scene_filtered"],
+            stats["rows_invalid_view_ids"],
+            stats["rows_drop_missing_rgb_or_mask_frames"],
+            stats["rows_drop_no_shared_frames"],
+            stats["rows_invalid_object_id"],
+            stats["clips_drop_missing_pkl"],
+        )
 
     @staticmethod
     def _has_valid_view_ids(row):
