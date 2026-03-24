@@ -71,38 +71,6 @@ def get_args_parser():
                         help="Path to CRTrack_test dataset")
     parser.add_argument('--crtrack_scene', type=str, default='Floor',
                         help="CRTrack scene filter for dataset loading (e.g. Floor, Lobby, all)")
-    parser.add_argument('--samwise_loss_weight', default=1.0, type=float,
-                        help="Weight for SAMWISE segmentation/CME losses when joint training with ReID")
-    parser.add_argument('--reid_loss_weight', default=1.0, type=float,
-                        help="Weight for ReID loss when joint training with SAMWISE")
-    parser.add_argument('--reid_model_name', default='resnet50', type=str,
-                        choices=['resnet18', 'resnet34', 'resnet50', 'resnet101'],
-                        help="Backbone used by Figure3 ReID model")
-    parser.add_argument('--reid_feat_dim', default=2048, type=int,
-                        help="Embedding dimension for Figure3 ReID model")
-    parser.add_argument('--reid_st_dim', default=128, type=int,
-                        help="Spatial-temporal embedding dimension for Figure3 ReID model")
-    parser.add_argument('--reid_sampler', default='softmax_triplet', type=str,
-                        choices=['softmax', 'triplet', 'softmax_triplet'],
-                        help="ReID classification/metric branch combination style")
-    parser.add_argument('--reid_metric_loss_type', default='triplet', type=str,
-                        choices=['triplet', 'cluster', 'triplet_cluster'],
-                        help="Configurable metric-loss composition for ReID")
-    parser.add_argument('--reid_label_smooth', default=True,
-                        type=lambda x: str(x).lower() in ['true', '1', 'yes'],
-                        help="Whether to use label smoothing in ReID id classification loss")
-    parser.add_argument('--reid_track_weight', default=1.0, type=float,
-                        help="Weight for track triplet term inside ReID loss")
-    parser.add_argument('--reid_cam_loss_weight', default=0.2, type=float,
-                        help="Weight for camera classification term inside ReID loss")
-    parser.add_argument('--reid_st_loss_weight', default=0.1, type=float,
-                        help="Weight for spatial-temporal consistency term inside ReID loss")
-    parser.add_argument('--reid_triplet_margin', default=0.3, type=float,
-                        help="Margin for ReID triplet loss")
-    parser.add_argument('--reid_track_triplet_margin', default=0.3, type=float,
-                        help="Margin for ReID track triplet loss")
-    parser.add_argument('--reid_cluster_margin', default=10.0, type=float,
-                        help="Margin for ReID cluster loss")
     parser.add_argument('--max_size', default=1024, type=int,
                         help="Frame size for preprocessing")
     parser.add_argument('--augm_resize', default=False, action='store_true',
@@ -148,5 +116,4 @@ def get_args_parser():
                         help="Path to folder containing the sequences folders results")
 
     return parser
-
 
