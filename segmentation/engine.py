@@ -45,15 +45,21 @@ def train_one_epoch(model: torch.nn.Module,
                 num_frames=view_samples.tensors.shape[1],
             )
 
-            if args.use_cme_head and "pred_cme_logits" in outputs:
-                weight = torch.tensor([1., 2.]).to(device)
-                CME_loss = F.cross_entropy(
-                    torch.cat(outputs["pred_cme_logits"]),
-                    ignore_index=-1,
-                    target=torch.tensor(outputs["cme_label"]).long().to(device),
-                    weight=weight,
-                )
-                losses["CME_loss"] = CME_loss if not CME_loss.isnan() else torch.tensor(0).to(device)
+                if args.use_cme_head and "pred_cme_logits" in outputs:
+                    weight = torch.tensor([1., 2.]).to(device)
+                    CME_loss = F.cross_entropy(
+                        torch.cat(outputs["pred_cme_logits"]),
+                        ignore_index=-1,
+                        target=torch.tensor(outputs["cme_label"]).long().to(device),
+                        weight=weight,
+                    )
+                    view_loss_dict["CME_loss"] = CME_loss if not CME_loss.isnan() else torch.tensor(0).to(device)
+
+                for k, v in view_loss_dict.items():
+                    if k in losses:
+                        losses[k] = losses[k] + v
+                    else:
+                        losses[k] = v
         else:
             samples = samples.to(device)
             captions = [t["caption"] for t in targets]

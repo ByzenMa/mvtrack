@@ -38,7 +38,7 @@ mvtrack/
 python main.py --dataset_file crtrack --name_exp crtrack_samwise
 ```
 
-> 当前仓库已调整为：在 CRTrack 训练时，每个 iteration 仅使用一个视角进行 segmentation 训练，不再将三视角 loss 在同一个 batch 内求和。
+> 当前仓库设置为：在 CRTrack 训练时，三个视角会在同一个 iteration 内共同参与训练，并对各视角 loss 进行求和。
 
 ### 2) Match
 
