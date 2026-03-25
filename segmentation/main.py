@@ -18,7 +18,6 @@ import datasets.samplers as samplers
 from datasets import build_dataset
 from engine import train_one_epoch
 from models.samwise import build_samwise
-from models.reid import ReID
 from os.path import join
 import sys
 import opts
@@ -51,29 +50,6 @@ def main(args):
 
     model = build_samwise(args)
     model.to(device)
-
-    use_reid_branch = args.dataset_file == 'crtrack'
-    reid_num_classes = getattr(dataset_train, "num_pid_classes", 0) if use_reid_branch else 0
-    if use_reid_branch and reid_num_classes <= 0:
-        raise ValueError("CRTrack dataset contains no valid pid classes for ReID training.")
-    if use_reid_branch:
-        print(f"ReID num pid classes: {reid_num_classes}")
-    reid_model = ReID(
-        num_classes=reid_num_classes,
-        num_cameras=3,
-        model_name=args.reid_model_name,
-        feat_dim=args.reid_feat_dim,
-        st_dim=args.reid_st_dim,
-        sampler=args.reid_sampler,
-        metric_loss_type=args.reid_metric_loss_type,
-        label_smooth=args.reid_label_smooth,
-        triplet_margin=args.reid_triplet_margin,
-        track_triplet_margin=args.reid_track_triplet_margin,
-        track_weight=args.reid_track_weight,
-        cluster_margin=args.reid_cluster_margin,
-        w_cam=args.reid_cam_loss_weight,
-        w_st=args.reid_st_loss_weight,
-    ).to(device) if use_reid_branch else None
 
     model_without_ddp = model
     if args.distributed:
@@ -155,7 +131,7 @@ def main(args):
             sampler_train.set_epoch(epoch)
         train_stats = train_one_epoch(
                     model, data_loader_train, optimizer, device, epoch,
-                    args.clip_max_norm, lr_scheduler=lr_scheduler, args=args, reid_model=reid_model)
+                    args.clip_max_norm, lr_scheduler=lr_scheduler, args=args)
 
         if args.output_dir:
             print("Save Model")
@@ -219,4 +195,3 @@ if __name__ == '__main__':
     args.output_dir = os.path.join(args.output_dir, name_exp)
 
     main(args)
-
