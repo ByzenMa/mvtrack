@@ -32,19 +32,18 @@ def train_one_epoch(model: torch.nn.Module,
         model.train()
 
         if args is not None and args.dataset_file == 'crtrack':
-            losses = {}
-            for view_idx in range(len(samples)):
-                view_samples = samples[view_idx].to(device)
-                view_targets = targets[view_idx]
+            selected_view_idx = (step - 1) % len(samples)
+            view_samples = samples[selected_view_idx].to(device)
+            view_targets = targets[selected_view_idx]
 
-                captions = [t["caption"] for t in view_targets]
-                outputs = model(view_samples, captions, view_targets)
+            captions = [t["caption"] for t in view_targets]
+            outputs = model(view_samples, captions, view_targets)
 
-                view_loss_dict = loss_masks(
-                    torch.cat(outputs["masks"]),
-                    view_targets,
-                    num_frames=view_samples.tensors.shape[1],
-                )
+            losses = loss_masks(
+                torch.cat(outputs["masks"]),
+                view_targets,
+                num_frames=view_samples.tensors.shape[1],
+            )
 
                 if args.use_cme_head and "pred_cme_logits" in outputs:
                     weight = torch.tensor([1., 2.]).to(device)
