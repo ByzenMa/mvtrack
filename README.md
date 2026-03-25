@@ -30,7 +30,7 @@ mvtrack/
 常用入口：
 
 - 训练：`segmentation/main.py`
-- 推理：`segmentation/inference_demo.py`、`segmentation/inference_mevis.py`、`segmentation/inference_ytvos.py`
+- 推理：`segmentation/inference_demo.py`、`segmentation/inference_mevis.py`、`segmentation/inference_ytvos.py`、`segmentation/inference_crtrack.py`
 
 示例（在 `segmentation/` 下）：
 
