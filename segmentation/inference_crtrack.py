@@ -155,6 +155,17 @@ def find_rgb_frame(root: Path, scene: str, clip: str, view_name: str, frame_id: 
     return matches[0] if matches else None
 
 
+def find_rgb_frame_from_dataset(dataset, scene: str, clip: str, view_name: str, frame_id: int):
+    """Reuse CRTrackDataset RGB index to avoid inference/train path mismatch."""
+    if not hasattr(dataset, "_build_rgb_index"):
+        return None
+    try:
+        rgb_index = dataset._build_rgb_index(scene, clip)
+    except Exception:
+        return None
+    return rgb_index.get(view_name, {}).get(int(frame_id), None)
+
+
 def draw_bbox(image_bgr, bbox, color=(0, 255, 0), label="pred"):
     if bbox is None:
         return image_bgr
@@ -220,13 +231,21 @@ def infer_crtrack(args, model):
     scene_metric_bucket = {}
 
     eval_root = build_eval_root(args)
-
-    max_to_process = min(len(dataset), args.max_samples) if args.max_samples > 0 else len(dataset)
-    print(f"Start processing {max_to_process} samples for CRTrack inference...")
+    ratio = float(args.infer_ratio)
+    ratio = max(0.0, min(1.0, ratio))
+    ratio_count = int(np.ceil(len(dataset) * ratio)) if ratio > 0 else 0
+    ratio_count = max(1, ratio_count) if len(dataset) > 0 and ratio > 0 else 0
+    max_to_process = ratio_count
+    if args.max_samples > 0:
+        max_to_process = min(max_to_process, args.max_samples)
+    print(
+        f"Start processing {max_to_process} / {len(dataset)} samples "
+        f"(infer_ratio={ratio:.3f}, max_samples={args.max_samples}) for CRTrack inference..."
+    )
 
     model.eval()
     for sample_idx, (samples, targets) in enumerate(loader):
-        if args.max_samples > 0 and sample_idx >= args.max_samples:
+        if sample_idx >= max_to_process:
             break
 
         processed = sample_idx + 1
@@ -281,10 +300,12 @@ def infer_crtrack(args, model):
                 mask_path = masks_root / scene / clip / view_name / f"{int(frame_id):06d}.png"
                 save_binary_mask(frame_mask, mask_path)
 
-                rgb_path = find_rgb_frame(eval_root, scene, clip, view_name, frame_id)
+                rgb_path = find_rgb_frame_from_dataset(dataset, scene, clip, view_name, frame_id)
+                if rgb_path is None:
+                    rgb_path = find_rgb_frame(eval_root, scene, clip, view_name, frame_id)
                 vis_rel_path = None
                 if rgb_path is not None:
-                    vis_path = viz_img_root / scene / clip / view_name / f"{int(frame_id):06d}.jpg"
+                    vis_path = viz_img_root / scene / clip / view_name / f"{int(frame_id):06d}_sample{sample_idx:06d}.jpg"
                     vis_path.parent.mkdir(parents=True, exist_ok=True)
                     img = cv2.imread(str(rgb_path))
                     if img is not None:
@@ -435,11 +456,14 @@ if __name__ == "__main__":
 
     parser = argparse.ArgumentParser("SAMWISE CRTrack inference script", parents=[opts.get_args_parser()])
     parser.add_argument("--max_samples", default=-1, type=int, help="Optional cap on number of CRTrack samples to process; -1 means all")
+    parser.add_argument("--infer_ratio", default=0.1, type=float, help="Fraction of inference dataset to process in [0, 1], default 0.1 (10%).")
     parser.add_argument("--eval_iou_thresh", default=0.5, type=float, help="IoU threshold for bbox matching in CVRIDF1/CVRMA evaluation")
     parser.add_argument("--viz_fps", default=8, type=int, help="FPS for saved visualization videos")
     args = parser.parse_args()
 
     if args.max_samples == 0:
         raise ValueError("--max_samples cannot be 0")
+    if not (0 < args.infer_ratio <= 1.0):
+        raise ValueError("--infer_ratio must be in (0, 1].")
 
     main(args)
