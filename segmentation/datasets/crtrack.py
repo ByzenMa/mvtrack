@@ -28,12 +28,21 @@ class CRTrackDataset(Dataset):
     VIEW_NAMES = ("view1", "view2", "view3")
     IMG_EXTS = (".jpg", ".jpeg", ".png", ".bmp", ".webp")
 
-    def __init__(self, root: Path, transforms, num_frames: int, strict_rgb_check: bool = True, scene_filter: str = "all"):
+    def __init__(
+        self,
+        root: Path,
+        transforms,
+        num_frames: int,
+        strict_rgb_check: bool = True,
+        scene_filter: str = "all",
+        eval_mode: bool = False,
+    ):
         self.root = Path(root)
         self._transforms = transforms
         self.num_frames = num_frames
         self.strict_rgb_check = strict_rgb_check
         self.scene_filter = str(scene_filter).strip()
+        self.eval_mode = bool(eval_mode)
 
         self.images_root = self.root / "images" / "train"
         self.cross_view_root = self.root / "ids_with_text_cross_view"
@@ -44,10 +53,29 @@ class CRTrackDataset(Dataset):
         self.rgb_index_cache = {}
         self.pid_to_label = {}
         self._prepare_metas()
+        self.eval_windows = self._build_eval_windows() if self.eval_mode else None
         self.num_pid_classes = len(self.pid_to_label)
 
         print("\n clip num: ", len(self.metas))
+        if self.eval_mode:
+            print("\n eval window num: ", len(self.eval_windows))
         print("\n")
+
+    def _build_eval_windows(self):
+        windows = []
+        for meta_idx, meta in enumerate(self.metas):
+            shared_frame_ids = meta.get("shared_frame_ids", [])
+            if len(shared_frame_ids) == 0:
+                continue
+            # Sequential windows from clip start, preserving temporal continuity.
+            for start in range(0, len(shared_frame_ids), self.num_frames):
+                clip_ids = shared_frame_ids[start:start + self.num_frames]
+                if len(clip_ids) == 0:
+                    continue
+                if len(clip_ids) < self.num_frames:
+                    clip_ids = clip_ids + [clip_ids[-1]] * (self.num_frames - len(clip_ids))
+                windows.append((meta_idx, clip_ids))
+        return windows
 
     def _select_csv_files(self):
         # Prefer selected annotations when available.
@@ -442,9 +470,26 @@ class CRTrackDataset(Dataset):
         return imgs, target
 
     def __len__(self):
+        if self.eval_mode:
+            return len(self.eval_windows)
         return len(self.metas)
 
     def __getitem__(self, idx):
+        if self.eval_mode:
+            meta_idx, sample_frame_ids = self.eval_windows[idx]
+            meta = self.metas[meta_idx]
+
+            view_imgs, view_targets = [], []
+            for view_name in self.VIEW_NAMES:
+                imgs, target = self._build_single_view_sample(meta, sample_frame_ids, view_name, meta_idx)
+                if imgs is None:
+                    raise RuntimeError(
+                        f"Missing RGB frame for eval sample {meta['scene']}/{meta['clip']} {view_name} frames={sample_frame_ids}"
+                    )
+                view_imgs.append(imgs)
+                view_targets.append(target)
+            return view_imgs, view_targets
+
         instance_check = False
         while not instance_check:
             meta = self.metas[idx]
@@ -491,7 +536,7 @@ def build(image_set, args):
     root = Path(args.crtrack_path)
     assert root.exists(), f"provided CRTrack path {root} does not exist"
 
-    if image_set not in ["train"]:
+    if image_set not in ["train", "eval"]:
         raise ValueError(f"Unsupported image_set for CRTrack: {image_set}")
 
     dataset_root = root / "CRTrack_In-domain" if (root / "CRTrack_In-domain").exists() else root
@@ -503,5 +548,6 @@ def build(image_set, args):
         num_frames=args.num_frames,
         strict_rgb_check=True,
         scene_filter=getattr(args, "crtrack_scene", "all"),
+        eval_mode=(image_set == "eval"),
     )
     return dataset
