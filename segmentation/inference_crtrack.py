@@ -354,50 +354,6 @@ def infer_crtrack(args, model):
         "overall": overall_metrics,
     }
 
-    # sequence-level metrics
-    seq_metrics = {}
-    for seq_name, st in per_sequence_stats.items():
-        metrics = counts_to_metrics(st)
-        seq_metrics[seq_name] = metrics
-
-        scene = st["scene"]
-        if scene not in scene_metric_bucket:
-            scene_metric_bucket[scene] = {"CVRIDF1": [], "CVRMA": []}
-        scene_metric_bucket[scene]["CVRIDF1"].append(metrics["CVRIDF1"])
-        scene_metric_bucket[scene]["CVRMA"].append(metrics["CVRMA"])
-
-    # scene-level + all-scenes averages (CRMOT-style: average over sequences)
-    scene_metrics = {}
-    all_idf1 = []
-    all_cvrma = []
-    for scene, vals in scene_metric_bucket.items():
-        scene_idf1 = float(np.mean(vals["CVRIDF1"])) if len(vals["CVRIDF1"]) else 0.0
-        scene_cvrma = float(np.mean(vals["CVRMA"])) if len(vals["CVRMA"]) else 0.0
-        scene_metrics[scene] = {
-            "num_sequences": len(vals["CVRIDF1"]),
-            "CVRIDF1": scene_idf1,
-            "CVRMA": scene_cvrma,
-        }
-        all_idf1.extend(vals["CVRIDF1"])
-        all_cvrma.extend(vals["CVRMA"])
-
-    overall_metrics = {
-        "num_sequences": len(seq_metrics),
-        "CVRIDF1": float(np.mean(all_idf1)) if len(all_idf1) else 0.0,
-        "CVRMA": float(np.mean(all_cvrma)) if len(all_cvrma) else 0.0,
-    }
-
-    metric_report = {
-        "metric_notes": {
-            "CVRIDF1": "Computed from per-sequence IDF1 and averaged over sequences.",
-            "CVRMA": "Mapped from per-sequence MOTA in CRMOT_evaluation (MOTA in *_CVRMA.xlsx corresponds to CVRMA).",
-            "iou_threshold": args.eval_iou_thresh,
-        },
-        "per_sequence": seq_metrics,
-        "per_scene": scene_metrics,
-        "overall": overall_metrics,
-    }
-
     summary_file = output_dir / "crtrack_inference_summary.json"
     with open(summary_file, "w", encoding="utf-8") as fp:
         json.dump(summary, fp, ensure_ascii=False, indent=2)
