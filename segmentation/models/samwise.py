@@ -498,6 +498,13 @@ class SAMWISE(nn.Module):
 
 
         # Step 2: Concatenate the memories and forward through the transformer encoder
+        if len(to_cat_memory) == 0:
+            # In inference, current frame_idx may be non-zero while memory_bank is empty
+            # (e.g. resume from ckpt without preceding frames in memory context).
+            # Use SAM2 no-memory token fallback to avoid empty-cat runtime error.
+            to_cat_memory = [self.sam.no_mem_embed.expand(1, B, self.sam.mem_dim)]
+            to_cat_memory_pos_embed = [self.sam.no_mem_pos_enc.expand(1, B, self.sam.mem_dim)]
+
         memory = torch.cat(to_cat_memory, dim=0)
         memory_pos_embed = torch.cat(to_cat_memory_pos_embed, dim=0)
 
