@@ -55,6 +55,7 @@ class SAMWISE(nn.Module):
         self.view_prompt_mlp = MLP(input_dim=text_encoder_embed_dim, hidden_dim=text_encoder_embed_dim, output_dim=self.sam.sam_prompt_embed_dim, num_layers=1)
 
         self.memory_bank = {} # to store all frames memory
+        self.last_frame_cme_applied = 0
 
         self.fusion_stages_txt = fusion_stages_txt
         self.fusion_stages_vis = sam.image_encoder.trunk.stage_ends
@@ -64,6 +65,50 @@ class SAMWISE(nn.Module):
         self.use_cme_head = args.use_cme_head
         self.cme_decision_window = args.cme_decision_window # minimum number of frames between each CME application
         self.switch_mem = args.switch_mem
+
+    @staticmethod
+    def _serialize_memory_bank(memory_bank):
+        serialized = {}
+        for key, value in memory_bank.items():
+            frame_dict = {}
+            for sub_key, sub_val in value.items():
+                if torch.is_tensor(sub_val):
+                    frame_dict[sub_key] = sub_val.detach().cpu()
+                else:
+                    frame_dict[sub_key] = sub_val
+            serialized[int(key)] = frame_dict
+        return serialized
+
+    @staticmethod
+    def _deserialize_memory_bank(memory_bank, device):
+        restored = {}
+        for key, value in memory_bank.items():
+            frame_dict = {}
+            for sub_key, sub_val in value.items():
+                if torch.is_tensor(sub_val):
+                    frame_dict[sub_key] = sub_val.to(device)
+                else:
+                    frame_dict[sub_key] = sub_val
+            restored[int(key)] = frame_dict
+        return restored
+
+    def get_extra_state(self):
+        """Persist non-parameter runtime states into checkpoint state_dict."""
+        return {
+            "memory_bank": self._serialize_memory_bank(self.memory_bank),
+            "last_frame_cme_applied": int(self.last_frame_cme_applied),
+        }
+
+    def set_extra_state(self, state):
+        if not isinstance(state, dict):
+            self.memory_bank = {}
+            self.last_frame_cme_applied = 0
+            return
+
+        device = next(self.parameters()).device
+        memory_bank = state.get("memory_bank", {})
+        self.memory_bank = self._deserialize_memory_bank(memory_bank, device)
+        self.last_frame_cme_applied = int(state.get("last_frame_cme_applied", 0))
 
     @staticmethod
     def _get_target_frame_ids(target):
