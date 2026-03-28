@@ -181,7 +181,7 @@ def build_eval_root(args):
 
 
 def infer_crtrack(args, model):
-    dataset = build_crtrack_dataset("train", args)
+    dataset = build_crtrack_dataset("eval", args)
     sampler = torch.utils.data.SequentialSampler(dataset)
     loader = DataLoader(
         dataset,

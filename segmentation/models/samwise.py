@@ -498,15 +498,23 @@ class SAMWISE(nn.Module):
 
 
         # Step 2: Concatenate the memories and forward through the transformer encoder
+        mem_dim = self.sam.mem_dim
+        device = current_vision_feats[-1].device
+        dtype = current_vision_feats[-1].dtype
+
         if len(to_cat_memory) == 0:
             # In inference, current frame_idx may be non-zero while memory_bank is empty
             # (e.g. resume from ckpt without preceding frames in memory context).
-            # Use SAM2 no-memory token fallback to avoid empty-cat runtime error.
-            mem_dim = self.sam.mem_dim
-            device = current_vision_feats[-1].device
-            dtype = current_vision_feats[-1].dtype
+            # Use a dummy memory token fallback to avoid empty-cat runtime error.
             to_cat_memory = [torch.zeros(1, B, mem_dim, device=device, dtype=dtype)]
             to_cat_memory_pos_embed = [torch.zeros(1, B, mem_dim, device=device, dtype=dtype)]
+
+        total_memory_tokens = sum(x.shape[0] for x in to_cat_memory)
+        if num_obj_ptr_tokens >= total_memory_tokens:
+            # RoPE cross-attention excludes object-pointer tokens from rotary encoding.
+            # Ensure at least one non-obj memory token exists so `num_k_rope > 0`.
+            to_cat_memory = [torch.zeros(1, B, mem_dim, device=device, dtype=dtype)] + to_cat_memory
+            to_cat_memory_pos_embed = [torch.zeros(1, B, mem_dim, device=device, dtype=dtype)] + to_cat_memory_pos_embed
 
         memory = torch.cat(to_cat_memory, dim=0)
         memory_pos_embed = torch.cat(to_cat_memory_pos_embed, dim=0)
