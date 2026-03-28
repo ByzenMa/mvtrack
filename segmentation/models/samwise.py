@@ -502,8 +502,10 @@ class SAMWISE(nn.Module):
             # In inference, current frame_idx may be non-zero while memory_bank is empty
             # (e.g. resume from ckpt without preceding frames in memory context).
             # Use SAM2 no-memory token fallback to avoid empty-cat runtime error.
-            to_cat_memory = [self.sam.no_mem_embed.expand(1, B, self.sam.mem_dim)]
-            to_cat_memory_pos_embed = [self.sam.no_mem_pos_enc.expand(1, B, self.sam.mem_dim)]
+            no_mem_dim = self.sam.no_mem_embed.shape[-1]
+            no_mem_pos_dim = self.sam.no_mem_pos_enc.shape[-1]
+            to_cat_memory = [self.sam.no_mem_embed.expand(1, B, no_mem_dim)]
+            to_cat_memory_pos_embed = [self.sam.no_mem_pos_enc.expand(1, B, no_mem_pos_dim)]
 
         memory = torch.cat(to_cat_memory, dim=0)
         memory_pos_embed = torch.cat(to_cat_memory_pos_embed, dim=0)
