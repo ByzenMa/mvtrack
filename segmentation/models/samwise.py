@@ -67,30 +67,36 @@ class SAMWISE(nn.Module):
         self.switch_mem = args.switch_mem
 
     @staticmethod
+    def _state_to_cpu(obj):
+        if torch.is_tensor(obj):
+            return obj.detach().cpu()
+        if isinstance(obj, dict):
+            return {k: SAMWISE._state_to_cpu(v) for k, v in obj.items()}
+        if isinstance(obj, list):
+            return [SAMWISE._state_to_cpu(v) for v in obj]
+        if isinstance(obj, tuple):
+            return tuple(SAMWISE._state_to_cpu(v) for v in obj)
+        return obj
+
+    @staticmethod
+    def _state_to_device(obj, device):
+        if torch.is_tensor(obj):
+            return obj.to(device)
+        if isinstance(obj, dict):
+            return {k: SAMWISE._state_to_device(v, device) for k, v in obj.items()}
+        if isinstance(obj, list):
+            return [SAMWISE._state_to_device(v, device) for v in obj]
+        if isinstance(obj, tuple):
+            return tuple(SAMWISE._state_to_device(v, device) for v in obj)
+        return obj
+
+    @staticmethod
     def _serialize_memory_bank(memory_bank):
-        serialized = {}
-        for key, value in memory_bank.items():
-            frame_dict = {}
-            for sub_key, sub_val in value.items():
-                if torch.is_tensor(sub_val):
-                    frame_dict[sub_key] = sub_val.detach().cpu()
-                else:
-                    frame_dict[sub_key] = sub_val
-            serialized[int(key)] = frame_dict
-        return serialized
+        return {int(k): SAMWISE._state_to_cpu(v) for k, v in memory_bank.items()}
 
     @staticmethod
     def _deserialize_memory_bank(memory_bank, device):
-        restored = {}
-        for key, value in memory_bank.items():
-            frame_dict = {}
-            for sub_key, sub_val in value.items():
-                if torch.is_tensor(sub_val):
-                    frame_dict[sub_key] = sub_val.to(device)
-                else:
-                    frame_dict[sub_key] = sub_val
-            restored[int(key)] = frame_dict
-        return restored
+        return {int(k): SAMWISE._state_to_device(v, device) for k, v in memory_bank.items()}
 
     def get_extra_state(self):
         """Persist non-parameter runtime states into checkpoint state_dict."""
