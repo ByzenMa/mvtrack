@@ -571,11 +571,18 @@ def on_load_checkpoint(model, checkpoint) -> None:
     model_state_dict = model.state_dict()
     for k in state_dict:
         if k in model_state_dict:
-            if state_dict[k].shape != model_state_dict[k].shape:
+            ckpt_val = state_dict[k]
+            model_val = model_state_dict[k]
+
+            # Non-tensor states (e.g. Module extra state dict) should be kept as-is.
+            if not torch.is_tensor(ckpt_val) or not torch.is_tensor(model_val):
+                continue
+
+            if ckpt_val.shape != model_val.shape:
                 print(f"Skip loading parameter: {k}, "
-                            f"required shape: {model_state_dict[k].shape}, "
-                            f"loaded shape: {state_dict[k].shape}")
-                state_dict[k] = model_state_dict[k]
+                            f"required shape: {model_val.shape}, "
+                            f"loaded shape: {ckpt_val.shape}")
+                state_dict[k] = model_val
         else:
             print(f"Dropping parameter {k}")
 
