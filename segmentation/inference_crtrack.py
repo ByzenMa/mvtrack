@@ -52,7 +52,15 @@ def run_single_view(model, view_samples, view_targets, threshold, device):
     with torch.no_grad():
         outputs = model(view_samples.to(device), captions, view_targets)
 
-    pred_masks = torch.cat(outputs["masks"], dim=0)  # [B*T, 1, h, w]
+    # SAMWISE inference returns {"pred_masks": [B*T, H, W]},
+    # while some training/eval code paths may expose {"masks": list[tensor]}.
+    if "pred_masks" in outputs:
+        pred_masks = outputs["pred_masks"].unsqueeze(1)  # [B*T, 1, h, w]
+    elif "masks" in outputs:
+        pred_masks = torch.cat(outputs["masks"], dim=0)  # [B*T, 1, h, w]
+    else:
+        raise KeyError(f"Unexpected model outputs keys: {list(outputs.keys())}")
+
     bsz = view_samples.tensors.shape[0]
     num_frames = view_samples.tensors.shape[1]
     h, w = view_samples.tensors.shape[-2:]
